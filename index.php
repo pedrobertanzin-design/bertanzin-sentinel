@@ -34,103 +34,114 @@ $metricas = $stmtMetricas->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Bertanzin Sentinel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
         body { 
             background-color: #f4f7f6; 
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
-        .navbar {
-            background: linear-gradient(90deg, #111827, #1f2937);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .navbar-brand { font-weight: 700; letter-spacing: 0.5px; }
         
+        /* Novo Cabeçalho Grande e Arredondado */
+        .main-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border-radius: 24px;
+            padding: 2.5rem 3rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+        .main-header h1 {
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            font-size: 2.2rem;
+        }
+        .main-header p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
         .card {
             border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             transition: transform 0.2s ease;
             margin-bottom: 1.5rem;
         }
-        .card:hover { transform: translateY(-2px); }
+        .card:hover { transform: translateY(-3px); }
         .card-header {
             background-color: #fff;
             border-bottom: 1px solid #f0f0f0;
             font-weight: 600;
-            border-top-left-radius: 12px !important;
-            border-top-right-radius: 12px !important;
-            padding: 1rem 1.25rem;
+            border-top-left-radius: 20px !important;
+            border-top-right-radius: 20px !important;
+            padding: 1.25rem 1.5rem;
         }
         
-        /* Indicador de Status "LED" */
         .status-dot {
-            height: 10px;
-            width: 10px;
+            height: 12px;
+            width: 12px;
             background-color: #10b981;
             border-radius: 50%;
             display: inline-block;
-            box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
         }
         .status-dot.offline {
             background-color: #ef4444;
-            box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
         }
 
         .log-payload { 
-            font-size: 0.8rem; 
-            background: #1f2937; 
+            font-size: 0.85rem; 
+            background: #1e293b; 
             color: #10b981; 
-            padding: 12px; 
-            border-radius: 8px; 
-            border: 1px solid #374151;
+            padding: 15px; 
+            border-radius: 12px; 
+            border: 1px solid #334155;
         }
         
-        .table > :not(caption) > * > * { padding: 1rem 0.75rem; vertical-align: middle; }
-        .badge { font-weight: 500; padding: 0.5em 0.75em; }
+        .table > :not(caption) > * > * { padding: 1.2rem 1rem; vertical-align: middle; }
+        .btn-custom { border-radius: 50px; font-weight: 600; padding: 0.6rem 1.5rem; }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark mb-4 py-3">
-    <div class="container-fluid px-4">
-        <a class="navbar-brand d-flex align-items-center gap-2" href="index.php">
-            <i class="bi bi-shield-check text-success fs-4"></i>
-            Bertanzin Sentinel
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link active" href="index.php"><i class="bi bi-grid-1x2-fill me-1"></i> Dashboard</a>
-                <a class="nav-link" href="novo_sistema.php"><i class="bi bi-plus-circle-fill me-1"></i> Novo Sistema</a>
-            </div>
+<div class="container-fluid px-4 mt-4">
+    <!-- Cabeçalho Principal -->
+    <div class="main-header d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+        <div>
+            <h1 class="mb-1">
+                <i class="bi bi-shield-check text-success me-2"></i>Bertanzin Sentinel
+            </h1>
+            <p class="mb-0">Centro Integrado de Monitoramento e Telemetria</p>
+        </div>
+        <div class="mt-4 mt-md-0 d-flex gap-3">
+            <a href="index.php" class="btn btn-light btn-custom">
+                <i class="bi bi-grid-1x2-fill me-2"></i>Dashboard
+            </a>
+            <a href="novo_sistema.php" class="btn btn-outline-light btn-custom">
+                <i class="bi bi-plus-lg me-2"></i>Novo Sistema
+            </a>
         </div>
     </div>
-</nav>
 
-<div class="container-fluid px-4">
     <div class="row">
-        <!-- Coluna da Esquerda: Sistemas e Métricas -->
+        <!-- Coluna da Esquerda -->
         <div class="col-lg-4">
-            
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-hdd-network text-primary me-2"></i> Sistemas Monitorados</span>
+                    <span><i class="bi bi-hdd-network text-primary me-2"></i> Sistemas Conectados</span>
                     <span class="badge bg-primary rounded-pill"><?= count($sistemas) ?></span>
                 </div>
                 <div class="list-group list-group-flush rounded-bottom">
                     <?php foreach($sistemas as $sis): ?>
-                        <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+                        <div class="list-group-item d-flex justify-content-between align-items-center py-3 px-4">
                             <div>
                                 <h6 class="mb-0 fw-bold"><?= htmlspecialchars($sis['nome']) ?></h6>
                                 <small class="text-muted">Adicionado em <?= date('d/m/y', strtotime($sis['criado_em'])) ?></small>
                             </div>
                             <div class="d-flex align-items-center gap-2">
-                                <span class="text-muted small"><?= $sis['ativo'] ? 'Online' : 'Offline' ?></span>
-                                <span class="status-dot <?= $sis['ativo'] ? '' : 'offline' ?>" title="<?= $sis['ativo'] ? 'Ativo' : 'Inativo' ?>"></span>
+                                <span class="text-muted small fw-medium"><?= $sis['ativo'] ? 'Online' : 'Offline' ?></span>
+                                <span class="status-dot <?= $sis['ativo'] ? '' : 'offline' ?>"></span>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -139,49 +150,48 @@ $metricas = $stmtMetricas->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="card">
                 <div class="card-header">
-                    <i class="bi bi-graph-up-arrow text-info me-2"></i> Últimas Métricas
+                    <i class="bi bi-graph-up-arrow text-info me-2"></i> Métricas Recentes
                 </div>
                 <div class="list-group list-group-flush rounded-bottom">
                     <?php foreach($metricas as $metrica): ?>
-                        <div class="list-group-item py-3">
+                        <div class="list-group-item py-3 px-4">
                             <div class="d-flex justify-content-between align-items-start mb-1">
                                 <span class="fw-bold text-dark"><?= htmlspecialchars($metrica['nome_metrica']) ?></span>
-                                <span class="badge bg-light text-primary border"><?= htmlspecialchars($metrica['valor_metrica']) ?></span>
+                                <span class="badge bg-light text-primary border rounded-pill px-3"><?= htmlspecialchars($metrica['valor_metrica']) ?></span>
                             </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted"><i class="bi bi-box me-1"></i><?= htmlspecialchars($metrica['sistema_nome']) ?></small>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <small class="text-muted fw-medium"><i class="bi bi-box me-1"></i><?= htmlspecialchars($metrica['sistema_nome']) ?></small>
                                 <small class="text-muted"><?= date('H:i - d/m', strtotime($metrica['registrado_em'])) ?></small>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
             </div>
-
         </div>
 
-        <!-- Coluna da Direita: Log de Eventos -->
+        <!-- Coluna da Direita -->
         <div class="col-lg-8">
-            <div class="card">
+            <div class="card h-100">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <span><i class="bi bi-terminal text-dark me-2"></i> Feed de Eventos e Logs</span>
-                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-clockwise"></i></button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3"><i class="bi bi-arrow-clockwise me-1"></i>Atualizar</button>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="ps-4">Data/Hora</th>
-                                    <th>Sistema</th>
-                                    <th>Nível</th>
-                                    <th>Mensagem</th>
-                                    <th class="pe-4 text-end">Ação</th>
+                                    <th class="ps-4 text-muted fw-semibold">Data/Hora</th>
+                                    <th class="text-muted fw-semibold">Sistema</th>
+                                    <th class="text-muted fw-semibold">Nível</th>
+                                    <th class="text-muted fw-semibold">Mensagem</th>
+                                    <th class="pe-4 text-end text-muted fw-semibold">Detalhes</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach($eventos as $evento): ?>
                                     <tr>
-                                        <td class="ps-4 text-nowrap text-muted small">
+                                        <td class="ps-4 text-nowrap text-muted small fw-medium">
                                             <?= date('d/m/Y H:i:s', strtotime($evento['registrado_em'])) ?>
                                         </td>
                                         <td class="fw-bold text-dark"><?= htmlspecialchars($evento['sistema_nome']) ?></td>
@@ -193,13 +203,13 @@ $metricas = $stmtMetricas->fetchAll(PDO::FETCH_ASSOC);
                                                 if($evento['nivel'] === 'warning') { $bg = 'bg-warning text-dark'; $icon = 'bi-exclamation-triangle'; }
                                                 if($evento['nivel'] === 'info') { $bg = 'bg-info text-dark'; $icon = 'bi-info-circle'; }
                                             ?>
-                                            <span class="badge <?= $bg ?>"><i class="bi <?= $icon ?> me-1"></i><?= strtoupper(htmlspecialchars($evento['nivel'])) ?></span>
+                                            <span class="badge <?= $bg ?> rounded-pill px-3"><i class="bi <?= $icon ?> me-1"></i><?= strtoupper(htmlspecialchars($evento['nivel'])) ?></span>
                                         </td>
                                         <td class="text-secondary"><?= htmlspecialchars($evento['mensagem']) ?></td>
                                         <td class="pe-4 text-end">
                                             <?php if($evento['payload']): ?>
-                                                <button class="btn btn-sm btn-light border" type="button" data-bs-toggle="collapse" data-bs-target="#payload-<?= $evento['id'] ?>">
-                                                    <i class="bi bi-code-slash"></i>
+                                                <button class="btn btn-sm btn-light border rounded-circle" type="button" data-bs-toggle="collapse" data-bs-target="#payload-<?= $evento['id'] ?>" title="Ver Payload">
+                                                    <i class="bi bi-braces"></i>
                                                 </button>
                                             <?php else: ?>
                                                 <span class="text-muted small">-</span>
@@ -210,7 +220,7 @@ $metricas = $stmtMetricas->fetchAll(PDO::FETCH_ASSOC);
                                     <tr>
                                         <td colspan="5" class="p-0 border-0">
                                             <div class="collapse" id="payload-<?= $evento['id'] ?>">
-                                                <div class="p-3 bg-light border-bottom">
+                                                <div class="p-4 bg-light border-bottom">
                                                     <pre class="log-payload m-0"><?= htmlspecialchars(json_encode(json_decode($evento['payload']), JSON_PRETTY_PRINT)) ?></pre>
                                                 </div>
                                             </div>
