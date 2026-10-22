@@ -1,30 +1,22 @@
 <?php
-$url = 'http://localhost/bertanzin-sentinel/api.php?endpoint=events';
+require_once 'Sentinel.php';
+
+// 1. Inicializa o SDK
+$url = 'http://localhost/bertanzin-sentinel/api.php';
 $token = 'gerir-token-secreto-123';
+$sentinel = new BertanzinSentinel($url, $token);
 
-$payload = json_encode([
-    'nivel' => 'warning',
-    'mensagem' => 'Falha de autenticação repetida',
-    'payload' => [
-        'ip' => '192.168.0.105',
-        'usuario_tentado' => 'admin',
-        'tentativas' => 5
-    ]
-]);
+// 2. Testando o Heartbeat
+echo "<h3>1. Heartbeat</h3>";
+$resHeartbeat = $sentinel->heartbeat();
+echo "<pre>" . print_r($resHeartbeat, true) . "</pre>";
 
-$ch = curl_init($url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Authorization: Bearer ' . $token,
-    'Content-Type: application/json',
-    'Content-Length: ' . strlen($payload)
-]);
+// 3. Testando uma Métrica
+echo "<h3>2. Métrica</h3>";
+$resMetrica = $sentinel->reportMetric('cpu_usage_percent', 45.2);
+echo "<pre>" . print_r($resMetrica, true) . "</pre>";
 
-$resposta = curl_exec($ch);
-$http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-curl_close($ch);
-
-echo "<h3>Status HTTP: {$http_status}</h3>";
-echo "<pre>" . print_r(json_decode($resposta, true), true) . "</pre>";
+// 4. Testando um Evento
+echo "<h3>3. Evento</h3>";
+$resEvento = $sentinel->reportEvent('error', 'Falha ao conectar no banco do GERIR', ['tabela' => 'usuarios']);
+echo "<pre>" . print_r($resEvento, true) . "</pre>";
