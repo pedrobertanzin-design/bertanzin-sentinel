@@ -87,5 +87,36 @@ if ($metodo === 'POST' && $endpoint === 'metrics') {
     exit;
 }
 
+// Rota: POST /events
+if ($metodo === 'POST' && $endpoint === 'events') {
+    $dados = json_decode(file_get_contents('php://input'), true);
+
+    if (!isset($dados['nivel']) || !isset($dados['mensagem'])) {
+        http_response_code(400);
+        echo json_encode(['erro' => 'Parâmetros nivel e mensagem são obrigatórios.']);
+        exit;
+    }
+
+    // O payload é opcional e deve ser convertido em string JSON para salvar no MySQL
+    $payload = isset($dados['payload']) ? json_encode($dados['payload']) : null;
+
+    try {
+        $stmt = $pdo->prepare("INSERT INTO eventos (sistema_id, nivel, mensagem, payload) VALUES (?, ?, ?, ?)");
+        $stmt->execute([
+            $sistema['id'], 
+            $dados['nivel'], 
+            $dados['mensagem'],
+            $payload
+        ]);
+
+        http_response_code(201);
+        echo json_encode(['sucesso' => true, 'mensagem' => 'Evento registrado com sucesso.']);
+    } catch (PDOException $e) {
+        http_response_code(500);
+        echo json_encode(['erro' => 'Erro ao salvar evento no banco.']);
+    }
+    exit;
+}
+
 http_response_code(404);
 echo json_encode(['erro' => 'Endpoint não encontrado.']);

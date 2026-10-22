@@ -1,10 +1,15 @@
 <?php
-$url = 'http://localhost/bertanzin-sentinel/api.php?endpoint=metrics';
+$url = 'http://localhost/bertanzin-sentinel/api.php?endpoint=events';
 $token = 'gerir-token-secreto-123';
 
 $payload = json_encode([
-    'nome_metrica' => 'storage_used_bytes',
-    'valor_metrica' => 2048.50
+    'nivel' => 'warning',
+    'mensagem' => 'Falha de autenticação repetida',
+    'payload' => [
+        'ip' => '192.168.0.105',
+        'usuario_tentado' => 'admin',
+        'tentativas' => 5
+    ]
 ]);
 
 $ch = curl_init($url);
